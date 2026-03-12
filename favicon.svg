@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">Kevil Gandhi portfolio favicon</title>
+  <desc id="desc">Rounded gradient square with KG initials.</desc>
+  <defs>
+    <linearGradient id="bg" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4f46e5" />
+      <stop offset="1" stop-color="#8b5cf6" />
+    </linearGradient>
+    <linearGradient id="glow" x1="16" y1="16" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.45" />
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <rect x="4" y="4" width="56" height="56" rx="18" fill="url(#bg)" />
+  <circle cx="20" cy="18" r="16" fill="url(#glow)" />
+  <circle cx="50" cy="48" r="14" fill="#0f172a" fill-opacity="0.14" />
+
+  <text
+    x="32"
+    y="39"
+    text-anchor="middle"
+    font-size="24"
+    font-weight="800"
+    letter-spacing="-1.5"
+    font-family="Inter, Poppins, Segoe UI, Arial, sans-serif"
+    fill="#ffffff"
+  >KG</text>
+</svg>
