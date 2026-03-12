@@ -1,10 +1,24 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
-import { FiGithub, FiUsers, FiBook, FiStar } from 'react-icons/fi';
+import { FiGithub, FiUsers, FiBook, FiStar, FiExternalLink } from 'react-icons/fi';
 import { useTheme } from '../utils/ThemeContext';
 
 const GitHub = () => {
+  const excludedRepos = new Set([
+    '022_kevil_gandhi_701_a3',
+    'portfolio-site',
+    'portfolio_site',
+    'kevil-gandhi-portfolio',
+    'kevil-gandhi-portfolio-site',
+  ]);
+  const githubPagesFallbackRepos = new Set([
+    'digitalclock',
+    'calendar',
+    'calculator',
+    'agecalculator',
+    'qrcodegenerator',
+  ]);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
   const [githubData, setGithubData] = useState(null);
@@ -17,9 +31,14 @@ const GitHub = () => {
       .then(data => setGithubData(data))
       .catch(err => console.error(err));
 
-    fetch('https://api.github.com/users/Kevil-Gandhi/repos?sort=updated&per_page=6')
+    fetch('https://api.github.com/users/Kevil-Gandhi/repos?sort=updated&per_page=20')
       .then(res => res.json())
-      .then(data => setRepos(data))
+      .then(data => {
+        const filteredRepos = Array.isArray(data)
+          ? data.filter((repo) => !excludedRepos.has(repo.name?.toLowerCase().replace(/[^a-z0-9_-]/g, '-')))
+          : [];
+        setRepos(filteredRepos);
+      })
       .catch(err => console.error(err));
   }, []);
 
@@ -28,6 +47,33 @@ const GitHub = () => {
     { icon: <FiUsers />, label: 'Followers', value: githubData?.followers || 0 },
     { icon: <FiUsers />, label: 'Following', value: githubData?.following || 0 },
   ];
+
+  const getLiveDemoUrl = (repo) => {
+    const owner = repo.owner?.login?.toLowerCase();
+    const repoName = repo.name;
+    const normalizedName = repoName?.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const homepage = repo.homepage?.trim();
+
+    if (homepage) {
+      return /^https?:\/\//i.test(homepage) ? homepage : `https://${homepage}`;
+    }
+
+    if (repo.has_pages) {
+      if (!owner || !repoName) return null;
+
+      if (repoName.toLowerCase() === `${owner}.github.io`) {
+        return `https://${owner}.github.io/`;
+      }
+
+      return `https://${owner}.github.io/${repoName}/`;
+    }
+
+    if (normalizedName && owner && githubPagesFallbackRepos.has(normalizedName)) {
+      return `https://${owner}.github.io/${repoName}/`;
+    }
+
+    return null;
+  };
 
   return (
     <section id="github" className="py-20" style={{ backgroundColor: isDark ? '#1f2937' : '#f9fafb' }}>
@@ -76,45 +122,71 @@ const GitHub = () => {
             Recent Repositories
           </h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {repos.slice(0, 6).map((repo, idx) => (
-              <motion.a
-                key={repo.id}
-                href={repo.html_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                initial={{ opacity: 0, y: 50 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: idx * 0.1 }}
-                whileHover={{ y: -5 }}
-                className="p-6 rounded-2xl group"
-                style={{
-                  backgroundColor: isDark ? 'rgba(17, 24, 39, 0.5)' : 'rgba(255, 255, 255, 0.9)',
-                  border: `1px solid ${isDark ? 'rgba(75, 85, 99, 0.5)' : 'rgba(229, 231, 235, 0.8)'}`,
-                  backdropFilter: 'blur(12px)'
-                }}
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <FiGithub className="text-2xl" style={{ color: '#6366f1' }} />
-                  {repo.stargazers_count > 0 && (
-                    <div className="flex items-center gap-1 text-yellow-500">
-                      <FiStar size={16} />
-                      <span className="text-sm">{repo.stargazers_count}</span>
-                    </div>
+            {repos.slice(0, 6).map((repo, idx) => {
+              const liveDemoUrl = getLiveDemoUrl(repo);
+
+              return (
+                <motion.div
+                  key={repo.id}
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: idx * 0.1 }}
+                  whileHover={{ y: -5 }}
+                  className="p-6 rounded-2xl group"
+                  style={{
+                    backgroundColor: isDark ? 'rgba(17, 24, 39, 0.5)' : 'rgba(255, 255, 255, 0.9)',
+                    border: `1px solid ${isDark ? 'rgba(75, 85, 99, 0.5)' : 'rgba(229, 231, 235, 0.8)'}`,
+                    backdropFilter: 'blur(12px)'
+                  }}
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <FiGithub className="text-2xl" style={{ color: '#6366f1' }} />
+                    {repo.stargazers_count > 0 && (
+                      <div className="flex items-center gap-1 text-yellow-500">
+                        <FiStar size={16} />
+                        <span className="text-sm">{repo.stargazers_count}</span>
+                      </div>
+                    )}
+                  </div>
+                  <h4 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors" style={{ color: isDark ? '#ffffff' : '#111827' }}>
+                    {repo.name}
+                  </h4>
+                  <p className="text-sm line-clamp-2 mb-3" style={{ color: isDark ? '#9ca3af' : '#4b5563' }}>
+                    {repo.description || 'No description available'}
+                  </p>
+                  {repo.language && (
+                    <span className="inline-block px-3 py-1 text-xs font-semibold rounded-full" style={{ backgroundColor: 'rgba(99, 102, 241, 0.1)', color: '#6366f1' }}>
+                      {repo.language}
+                    </span>
                   )}
-                </div>
-                <h4 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors" style={{ color: isDark ? '#ffffff' : '#111827' }}>
-                  {repo.name}
-                </h4>
-                <p className="text-sm line-clamp-2 mb-3" style={{ color: isDark ? '#9ca3af' : '#4b5563' }}>
-                  {repo.description || 'No description available'}
-                </p>
-                {repo.language && (
-                  <span className="inline-block px-3 py-1 text-xs font-semibold rounded-full" style={{ backgroundColor: 'rgba(99, 102, 241, 0.1)', color: '#6366f1' }}>
-                    {repo.language}
-                  </span>
-                )}
-              </motion.a>
-            ))}
+
+                  <div className="mt-4 flex items-center gap-2">
+                    <a
+                      href={repo.html_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded-full"
+                      style={{ backgroundColor: 'rgba(99, 102, 241, 0.12)', color: '#6366f1' }}
+                    >
+                      <FiGithub size={14} />
+                      Code
+                    </a>
+                    {liveDemoUrl && (
+                      <a
+                        href={liveDemoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded-full"
+                        style={{ backgroundColor: 'rgba(16, 185, 129, 0.14)', color: '#059669' }}
+                      >
+                        <FiExternalLink size={14} />
+                        Live Demo
+                      </a>
+                    )}
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
 
           {/* GitHub Stats Images */}

@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { FiCode, FiDatabase, FiTool } from 'react-icons/fi';
+import { FiCloud, FiCode, FiDatabase, FiTool } from 'react-icons/fi';
+import * as SiIcons from 'react-icons/si';
 import { useTheme } from '../utils/ThemeContext';
 
 const Skills = () => {
@@ -14,64 +15,77 @@ const Skills = () => {
       title: 'Programming Languages',
       icon: <FiCode />,
       skills: [
-        { name: 'C', level: 85 },
-        { name: 'C++', level: 80 },
-        { name: 'Java', level: 85 },
-        { name: 'Python', level: 80 },
-        { name: 'JavaScript', level: 85 },
-        { name: 'VB.NET', level: 75 },
-        { name: 'Shell Scripting', level: 75 },
+        { name: 'C', icon: 'SiC' },
+        { name: 'C++', icon: 'SiCplusplus' },
+        { name: 'Java', icon: 'SiOpenjdk' },
+        { name: 'Kotlin', icon: 'SiKotlin' },
+        { name: 'Python', icon: 'SiPython' },
+        { name: 'JavaScript', icon: 'SiJavascript' },
+        { name: 'VB.NET', icon: 'SiDotnet' },
+        { name: 'Shell Scripting', icon: 'SiGnubash' },
       ],
     },
     {
       title: 'Web Technologies',
       icon: <FiCode />,
       skills: [
-        { name: 'HTML', level: 90 },
-        { name: 'CSS', level: 85 },
-        { name: 'React.js', level: 85 },
-        { name: 'Node.js', level: 80 },
-        { name: 'Express.js', level: 80 },
-        { name: 'PHP', level: 75 },
-        { name: 'ASP.NET', level: 75 },
-        { name: '.NET Web API', level: 80 },
+        { name: 'HTML', icon: 'SiHtml5' },
+        { name: 'CSS', icon: 'SiCss3' },
+        { name: 'TypeScript', icon: 'SiTypescript' },
+        { name: 'React.js', icon: 'SiReact' },
+        { name: 'Node.js', icon: 'SiNodedotjs' },
+        { name: 'Express.js', icon: 'SiExpress' },
+        { name: 'PHP', icon: 'SiPhp' },
+        { name: 'ASP.NET', icon: 'SiDotnet' },
+        { name: '.NET Web API', icon: 'SiDotnet' },
       ],
     },
     {
       title: 'Databases',
       icon: <FiDatabase />,
       skills: [
-        { name: 'MySQL', level: 85 },
-        { name: 'MongoDB', level: 80 },
-        { name: 'PostgreSQL', level: 80 },
-        { name: 'Oracle', level: 75 },
-        { name: 'MSSQL', level: 75 },
+        { name: 'MySQL', icon: 'SiMysql' },
+        { name: 'MongoDB', icon: 'SiMongodb' },
+        { name: 'PostgreSQL', icon: 'SiPostgresql' },
+        { name: 'Oracle', icon: 'SiOracle' },
+        { name: 'MSSQL', icon: 'SiMicrosoftsqlserver' },
       ],
     },
     {
       title: 'Frameworks & Technologies',
       icon: <FiTool />,
       skills: [
-        { name: 'MERN Stack', level: 85 },
-        { name: 'Enterprise Java', level: 80 },
-        { name: 'iOS Development', level: 75 },
-        { name: 'AI/ML', level: 70 },
-        { name: 'Blockchain', level: 70 },
-        { name: 'Hyperledger Fabric', level: 65 },
+        { name: 'MERN Stack', icon: 'SiMongodb' },
+        { name: 'Enterprise Java', icon: 'SiOpenjdk' },
+        { name: 'Android Development', icon: 'SiAndroid' },
+        { name: 'iOS Development', icon: 'SiApple' },
+        { name: 'AI/ML', icon: 'SiTensorflow' },
+        { name: 'Blockchain', icon: 'SiBlockchaindotcom' },
+        { name: 'Hyperledger Fabric', icon: 'SiHyperledger' },
+      ],
+    },
+    {
+      title: 'Cloud & Deployment',
+      icon: <FiCloud />,
+      skills: [
+        { name: 'Hostinger', icon: 'SiHostinger' },
+        { name: 'Cloudflare', icon: 'SiCloudflare' },
+        { name: 'AWS', icon: 'SiAmazonwebservices' },
+        { name: 'Virtualization', icon: 'SiVmware' },
+        { name: 'Docker', icon: 'SiDocker' },
+        { name: 'GitHub Pages', icon: 'SiGithub' },
       ],
     },
     {
       title: 'Tools & DevOps',
       icon: <FiTool />,
       skills: [
-        { name: 'Git', level: 85 },
-        { name: 'VS Code', level: 90 },
-        { name: 'Visual Studio', level: 85 },
-        { name: 'Android Studio', level: 75 },
-        { name: 'Firebase', level: 75 },
-        { name: 'Linux', level: 85 },
-        { name: 'Cloud & Hosting', level: 80 },
-        { name: 'Domain Management', level: 80 },
+        { name: 'Git', icon: 'SiGit' },
+        { name: 'VS Code', icon: 'SiVisualstudiocode' },
+        { name: 'Visual Studio', icon: 'SiVisualstudio' },
+        { name: 'Android Studio', icon: 'SiAndroidstudio' },
+        { name: 'Firebase', icon: 'SiFirebase' },
+        { name: 'Linux', icon: 'SiLinux' },
       ],
     },
   ];
@@ -111,27 +125,32 @@ const Skills = () => {
                   </h3>
                 </div>
 
-                <div className="space-y-4">
+                <div className="grid sm:grid-cols-2 gap-3">
                   {category.skills.map((skill) => (
-                    <div key={skill.name}>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-medium" style={{ color: isDark ? '#d1d5db' : '#374151' }}>
-                          {skill.name}
-                        </span>
-                        <span className="text-sm" style={{ color: isDark ? '#9ca3af' : '#6b7280' }}>
-                          {skill.level}%
-                        </span>
-                      </div>
-                      <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor: isDark ? '#374151' : '#e5e7eb' }}>
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={isInView ? { width: `${skill.level}%` } : {}}
-                          transition={{ duration: 1, delay: idx * 0.1 }}
-                          className="h-full"
-                          style={{ background: 'linear-gradient(to right, #6366f1, #8b5cf6)' }}
-                        />
-                      </div>
-                    </div>
+                    <motion.div
+                      key={skill.name}
+                      whileHover={{ y: -2 }}
+                      className="flex items-center gap-3 px-3 py-2 rounded-xl"
+                      style={{
+                        backgroundColor: isDark ? 'rgba(31, 41, 55, 0.7)' : 'rgba(243, 244, 246, 0.9)',
+                        border: `1px solid ${isDark ? 'rgba(75, 85, 99, 0.6)' : 'rgba(209, 213, 219, 0.8)'}`,
+                      }}
+                    >
+                      {(() => {
+                        const SkillIcon = SiIcons[skill.icon] || FiTool;
+
+                        return (
+                          <SkillIcon
+                            className="text-lg shrink-0"
+                            style={{ color: isDark ? '#a5b4fc' : '#4f46e5' }}
+                            aria-hidden="true"
+                          />
+                        );
+                      })()}
+                      <span className="text-sm font-medium" style={{ color: isDark ? '#d1d5db' : '#374151' }}>
+                        {skill.name}
+                      </span>
+                    </motion.div>
                   ))}
                 </div>
               </motion.div>

@@ -8,7 +8,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isDark, toggleTheme } = useTheme();
 
-  const menuItems = ['Home', 'About', 'Skills', 'Projects', 'GitHub', 'Resume', 'Contact'];
+  const menuItems = ['Home', 'About', 'Experience', 'Skills', 'Projects', 'GitHub', 'Resume', 'Contact'];
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
